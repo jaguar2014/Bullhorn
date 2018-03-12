@@ -48,7 +48,15 @@ public class DataLoader implements CommandLineRunner {
         appUser.addRole(roleRepo.findAppRoleByRolename("USER"));
         appUser.setUsername("dodo");
         appUser.setPassword("pass");
-        userRepo.save(appUser);
+        appUser.addFollows(userRepo.findByUsername("Ashu"));// dodo follows ashu
+        appUser.addFollower(userRepo.findByUsername("Ashu"));
+                userRepo.save(appUser);
+
+
+
+
+
+
 
 
 
@@ -75,11 +83,7 @@ public class DataLoader implements CommandLineRunner {
         commentRepository.save(comment);
         tweetRepository.save(tweet);
 
-        appUser.addFollower(userRepo.findByUsername("Ashu"));
-        userRepo.save(appUser);
 
-        appUser.addFollows(userRepo.findByUsername("Ashu"));
-        userRepo.save(appUser);
 
 
 
