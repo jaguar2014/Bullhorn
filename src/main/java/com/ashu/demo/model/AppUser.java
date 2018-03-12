@@ -28,22 +28,22 @@ public class AppUser {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "relation",
+    @JoinTable(name = "followers",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private List<AppUser> followers;
 
     @ManyToMany
-    @JoinTable(name = "relation",
+    @JoinTable(name = "follows",
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follows_id"))
     private List<AppUser> follows;
 
-@OneToMany(mappedBy = "appUser")
-    private List<Tweet> tweets;
+@OneToMany(mappedBy = "appUser",cascade = CascadeType.PERSIST)
+    private Set<Tweet> tweets;
 
 
-@OneToMany(mappedBy = "appUser")
-    private List<Comment> comments;
+@OneToMany(mappedBy = "appUser",cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 
     public void addTweet(Tweet tweet) {
         tweets.add(tweet);
@@ -53,20 +53,47 @@ public class AppUser {
         comments.add(comment);
     }
 
+    public void addFollower(AppUser follower){
 
-    public List<Tweet> getTweets() {
+        this.followers.add(follower);
+
+    }
+
+    public void addFollows(AppUser follows){
+        this.follows.add(follows);
+
+    }
+
+
+    public List<AppUser> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<AppUser> followers) {
+        this.followers = followers;
+    }
+
+    public List<AppUser> getFollows() {
+        return follows;
+    }
+
+    public void setFollows(List<AppUser> follows) {
+        this.follows = follows;
+    }
+
+    public Set<Tweet> getTweets() {
         return tweets;
     }
 
-    public void setTweets(List<Tweet> tweets) {
+    public void setTweets(Set<Tweet> tweets) {
         this.tweets = tweets;
     }
 
-    public List<Comment> getComments() {
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 
@@ -105,11 +132,11 @@ public class AppUser {
 
     public AppUser() {
         this.roles = new HashSet<>();
-        this.tweets = new ArrayList<>();
+        this.tweets = new HashSet<>();
         encoder = passwordEncoder();
         this.followers = new ArrayList<>();
         this.follows = new ArrayList<>();
-        this.comments = new ArrayList<>();
+        this.comments = new HashSet<>();
 
     }
 
@@ -166,19 +193,5 @@ public class AppUser {
         System.out.println("Password:"+this.password);
     }
 
-    public List<AppUser> getFollowers() {
-        return followers;
-    }
 
-    public void setFollowers(List<AppUser> followers) {
-        this.followers = followers;
-    }
-
-    public List<AppUser> getFollows() {
-        return follows;
-    }
-
-    public void setFollows(List<AppUser> follows) {
-        this.follows = follows;
-    }
 }

@@ -5,8 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -26,13 +26,13 @@ public class Tweet {
     @ManyToOne
     private AppUser appUser;
 
-    @OneToMany(mappedBy = "tweet")
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "tweet",cascade = CascadeType.ALL)
+    private Set<Comment> comments;
 
 
 
     public Tweet(){
-        this.comments = new ArrayList<>();
+        this.comments = new HashSet<>();
     }
 
     public void addComment(Comment comment) {
@@ -53,11 +53,11 @@ public class Tweet {
         return message;
     }
 
-    public List<Comment> getComments() {
+    public Set<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
 

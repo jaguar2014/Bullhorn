@@ -41,20 +41,45 @@ public class DataLoader implements CommandLineRunner {
         AppUser appUser = new AppUser();
         appUser.addRole(role);
         appUser.setUsername("Ashu");
-        appUser.setPassword("password");
+        appUser.setPassword("pass");
         userRepo.save(appUser);
+
+        appUser = new AppUser();
+        appUser.addRole(roleRepo.findAppRoleByRolename("USER"));
+        appUser.setUsername("dodo");
+        appUser.setPassword("pass");
+        userRepo.save(appUser);
+
+
 
         Tweet tweet = new Tweet();
-        tweet.setMessage("my first tweet");
+        tweet.setMessage("tweeet weeet weeet");
+        tweet.setAppUser(appUser);
+        tweetRepository.save(tweet);
 
-         tweetRepository.save(tweet);
-        Comment comment = new Comment();
-        comment.setComment("my first comment");
-        tweet.addComment(comment);
+        tweet = new Tweet();
+        tweet.setMessage("additional tweet");
+        tweet.setAppUser(appUser);
+        tweetRepository.save(tweet);
+
+
 
         appUser.addTweet(tweet);
+
         userRepo.save(appUser);
 
+        Comment comment = new Comment();
+        comment.setComment("a comment for the tweet weet weet");
+        comment.setTweet(tweet);
+        comment.setAppUser(appUser);
+        commentRepository.save(comment);
+        tweetRepository.save(tweet);
+
+        appUser.addFollower(userRepo.findByUsername("Ashu"));
+        userRepo.save(appUser);
+
+        appUser.addFollows(userRepo.findByUsername("Ashu"));
+        userRepo.save(appUser);
 
 
 
