@@ -30,19 +30,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        PasswordEncoder pE = passwordEncoder();
-        auth.inMemoryAuthentication().withUser("username").password(pE.encode("password")).authorities("USER")
-                .and().withUser("admin").password(pE.encode("password")).authorities("ADMIN");
+    //    PasswordEncoder pE = passwordEncoder();
+//        auth.inMemoryAuthentication().withUser("username").password(pE.encode("password")).authorities("USER")
+//                .and().withUser("admin").password(pE.encode("password")).authorities("ADMIN");
         auth.userDetailsService(userDetailsServiceBean());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/","/css/**","/js/**","/img/**","/fonts/**","/search","/showelements","/categories","/showlostclothes","/showlostpets","/showlostothers").permitAll()
-                .antMatchers("/adminaddlost").hasAuthority("ADMIN")
+                .antMatchers("/register","/css/**","/js/**","/img/**","/fonts/**").permitAll()
                 .anyRequest().authenticated()
-
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()

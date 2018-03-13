@@ -8,7 +8,9 @@ import java.util.List;
 public interface TweetRepository extends CrudRepository<Tweet,Long> {
 
 
-    List<Tweet> findByAppUser(String username);
+    List<Tweet> findByAppUserId(Long id);
+
+
 
 }
 
