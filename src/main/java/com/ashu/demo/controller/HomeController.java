@@ -15,8 +15,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -79,6 +82,8 @@ public class HomeController {
     @GetMapping("/")
     public  String showIndex(Model model, Authentication auth){
 
+        AppUser appUser = appUserRepository.findByUsername(auth.getName());
+
         //show tweet form , and with it a way for uploading images
         model.addAttribute("tweetForm", new Tweet());
 
@@ -87,9 +92,18 @@ public class HomeController {
 
         model.addAttribute("userinfo", new AppUser());
 
-        Long id = appUserRepository.findByUsername(auth.getName()).getId();
+//        Long id = appUserRepository.findByUsername(auth.getName()).getId();
 
-        model.addAttribute("tweets", tweetRepository.findByAppUserId(id));
+        List<AppUser> follows = appUser.getFollows();
+        List<Long> ids = new ArrayList<>();
+
+        for (AppUser a :
+                follows) {
+            System.out.println(a.getId());
+            ids.add(appUser.getId());
+            ids.add(a.getId());
+        }
+        model.addAttribute("tweets", tweetRepository.findByAppUser_IdIsIn(ids));
         // so that the currently logged user will be able to follow  from the list
         //when that link is clicked it will show all tweets from that user
         //display the posts in chronoligically reverse order , for that write a repository query
@@ -155,19 +169,30 @@ public class HomeController {
     }
 
     @PostMapping("/follow/{username}")
-    public String follow(Model model, Authentication auth, @PathVariable("username") String username){
+    public String follow(Model model, Authentication auth, @PathVariable("username") String username, RedirectAttributes redirectAttributes){
 
 
         AppUser appUser = appUserRepository.findByUsername(auth.getName());
+        AppUser followeduser = appUserRepository.findByUsername(username);
+
+
+
+
+       // Authentication newAuth=new UsernamePasswordAuthenticationToken(new TwitterCloneUserDetails(newUser),oldAuth.getCredentials(),oldAuth.getAuthorities());
 
 
         appUser.addRole(appRoleRepository.findAppRoleByRolename("USER"));
         appUser.addFollows(appUserRepository.findByUsername(username));
 
         appUserRepository.save(appUser);
+//        Authentication newAuth = new UsernamePasswordAuthenticationToken(new SSUDS(appUserRepository).loadUserByUsername(username), auth.getCredentials(), auth.getAuthorities());
+//        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         return "redirect:/";
     }
+
+
+
 
     @GetMapping("/comment")
     public String showTweet(){
