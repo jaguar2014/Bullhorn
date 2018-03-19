@@ -13,7 +13,7 @@ public interface TweetRepository extends CrudRepository<Tweet, Long> {
 
     List<Tweet> findByAppUserIdInOrderByDatepostedDesc(List<String> ids);
 
-    List<Tweet> findByAppUser_IdIsIn(List<Long> ids);
+    List<Tweet> findByAppUser_IdIsInOrderByDatepostedDesc(List<Long> ids);
 
 
 }

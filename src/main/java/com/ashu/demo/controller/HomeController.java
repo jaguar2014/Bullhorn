@@ -103,7 +103,7 @@ public class HomeController {
             ids.add(appUser.getId());
             ids.add(a.getId());
         }
-        model.addAttribute("tweets", tweetRepository.findByAppUser_IdIsIn(ids));
+        model.addAttribute("tweets", tweetRepository.findByAppUser_IdIsInOrderByDatepostedDesc(ids));
         // so that the currently logged user will be able to follow  from the list
         //when that link is clicked it will show all tweets from that user
         //display the posts in chronoligically reverse order , for that write a repository query
